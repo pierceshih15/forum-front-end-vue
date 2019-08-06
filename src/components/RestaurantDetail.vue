@@ -29,7 +29,7 @@
     </div>
     <div class="col-lg-8">
       <p>{{ restaurant.description }}</p>
-      <a class="btn btn-primary btn-border mr-2" href="#">Dashboard</a>
+      <router-link to="/restaurants/:id/dashboard" class="btn btn-primary btn-border mr-2">Dashboard</router-link>
 
       <button
         v-if="restaurant.isFavorited"
