@@ -11,7 +11,7 @@
 
 <script>
 import NavTabs from "./../components/NavTabs";
-import UsersCard from "./UsersCard";
+import UsersCard from "./../components/UsersCard";
 
 const dummyData = {
   users: [

@@ -28,9 +28,9 @@
 
 <script>
 import NavTabs from "./../components/NavTabs";
-import RestaurantsCard from "./RestaurantsCard";
-import RestaurantsNavPills from "./RestaurantsNavPills";
-import RestaurantsPagination from "./RestaurantsPagination";
+import RestaurantsCard from "./../components/RestaurantsCard";
+import RestaurantsNavPills from "./../components/RestaurantsNavPills";
+import RestaurantsPagination from "./../components/RestaurantsPagination";
 
 const dummyData = {
   restaurants: [

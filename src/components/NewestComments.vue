@@ -4,7 +4,9 @@
     <div class="card-body">
       <div v-for="comment in comments" :key="comment.id">
         <h4>
-          <router-link to="#">{{comment.Restaurant.name}}</router-link>
+          <router-link
+            to="{name:'restaurant', params:{id: comment.Restaurant.id}}"
+          >{{comment.Restaurant.name}}</router-link>
         </h4>
         <p>{{comment.text}}</p>by
         <router-link to="#">{{comment.User.name}}</router-link>
@@ -17,16 +19,10 @@
 
 <script>
 import moment from "moment";
+import { fromNowFilter } from "./../uilts/mixins";
 
 export default {
-  filters: {
-    fromNow(datetime) {
-      if (!datetime) {
-        return "-";
-      }
-      return moment(datetime).fromNow();
-    }
-  },
+  mixins: [fromNowFilter],
   props: {
     comments: {
       type: Array,
