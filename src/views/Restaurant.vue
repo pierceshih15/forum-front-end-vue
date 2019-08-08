@@ -136,6 +136,7 @@ const dummyUser = {
 };
 
 export default {
+  name: "Restaurant",
   components: {
     RestaurantDetail,
     RestaurantComments,

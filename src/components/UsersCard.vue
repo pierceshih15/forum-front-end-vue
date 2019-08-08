@@ -1,8 +1,8 @@
 <template>
   <div class="col-3 text-center">
-    <a href="#">
+    <router-link :to="{name:'user',params:{id:user.id}}">
       <img src="http://via.placeholder.com/300x300?text=No+Image" width="140px" height="140px" />
-    </a>
+    </router-link>
     <h2>{{user.name}}</h2>
     <span class="badge badge-secondary">追蹤人數：{{user.FollowerCount}}</span>
     <p class="mt-3">
