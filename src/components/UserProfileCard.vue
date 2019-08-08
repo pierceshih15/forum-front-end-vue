@@ -25,9 +25,10 @@
 
           <!-- 本人 -->
           <template v-if="isCurrentUser">
-            <a href="/users/1/edit">
-              <button type="submit" class="btn btn-primary">edit</button>
-            </a>
+            <router-link
+              :to="{name:'admin-user-edit',params:{id:user.id}}"
+              class="btn btn-primary"
+            >edit</router-link>
           </template>
 
           <!-- 非本人 -->

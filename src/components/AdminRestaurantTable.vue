@@ -34,10 +34,11 @@
            :to="{name:'admin-restaurant', params:{id:restaurant.id}}" class="btn btn-link">
            Show
           </router-link>
-          <a
-            href="#"
-            class="btn btn-link"
-          >Edit</a>
+
+          <router-link 
+           :to="{name:'admin-restaurant-edit', params:{id:restaurant.id}}" class="btn btn-link">
+          Edit
+          </router-link>
 
           <button
             type="button"
