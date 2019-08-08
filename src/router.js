@@ -89,6 +89,11 @@ export default new Router({
       component: () => import('./views/AdminUserEdit.vue')
     },
     {
+      path: '/admin/categories',
+      name: 'admin-categories',
+      component: () => import('./views/AdminCategories.vue')
+    },
+    {
       path: '*',
       name: 'not-found',
       component: NotFound
