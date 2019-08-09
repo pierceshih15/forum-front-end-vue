@@ -32,7 +32,11 @@
         />
       </div>
 
-      <button class="btn btn-lg btn-primary btn-block mb-3" type="submit">Submit</button>
+      <button
+        class="btn btn-lg btn-primary btn-block mb-3"
+        type="submit"
+        :disabled="isProcessing"
+      >Submit</button>
 
       <div class="text-center mb-3">
         <p>
@@ -46,23 +50,60 @@
 </template>
 
 <script>
+import authorizationAPI from "./../apis/authorization";
+import { Toast } from "./../uilts/helpers";
+
 export default {
   name: "SignIn",
   data() {
     return {
       email: "",
-      password: ""
+      password: "",
+      isProcessing: false
     };
   },
-  method: {
-    handleSubmit(e) {
-      const data = JSON.stringify({
-        email: this.email,
-        password: this.password
-      });
+  methods: {
+    async handleSubmit(e) {
+      try {
+        if (!this.email || !this.password) {
+          Toast.fire({
+            type: "warning",
+            title: "請填入 email 和 password"
+          });
+          return;
+        }
 
-      // TODO - 需要驗證使用者登入資訊是否合法
-      console.log("data", data);
+        this.isProcessing = true;
+
+        // 驗證使用者登入資訊是否合法
+        const response = await authorizationAPI.signIn({
+          email: this.email,
+          password: this.password
+        });
+
+        // 取得 API 請求後的資料
+        const { data, statusText } = response;
+
+        if (statusText !== "OK" || data.status !== "success") {
+          throw new Error(statusText);
+        }
+
+        // 將 token 存放在 localStorage 內
+        localStorage.setItem("token", data.token);
+
+        // 成功登入後轉址到餐廳首頁
+        this.$router.push("/restaurants");
+      } catch (error) {
+        // 清空密碼
+        this.password = "";
+        this.isProcessing = false;
+
+        // 顯示錯誤提示
+        Toast.fire({
+          type: "warning",
+          title: "請再次確認，您輸入的帳號密碼有誤"
+        });
+      }
     }
   }
 };

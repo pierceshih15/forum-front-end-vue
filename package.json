@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "axios": "^0.19.0",
     "bootstrap": "^4.3.1",
     "core-js": "^2.6.5",
     "install": "^0.13.0",
@@ -15,6 +16,7 @@
     "moment": "^2.24.0",
     "npm": "^6.10.2",
     "popper.js": "^1.15.0",
+    "sweetalert2": "^8.15.2",
     "uuid": "^3.3.2",
     "vue": "^2.6.10",
     "vue-router": "^3.0.3"
