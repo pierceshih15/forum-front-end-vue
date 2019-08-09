@@ -51,7 +51,7 @@
 
 <script>
 import authorizationAPI from "./../apis/authorization";
-import { Toast } from "./../uilts/helpers";
+import { Toast } from "./../utils/helpers";
 
 export default {
   name: "SignIn",

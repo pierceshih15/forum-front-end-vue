@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { emptyImageFilter } from "./../uilts/mixins";
+import { emptyImageFilter } from "./../utils/mixins";
 
 export default {
   name: "UserFavoritedRestaurantsCard",

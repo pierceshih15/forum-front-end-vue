@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import { emptyImageFilter } from "./../uilts/mixins";
+import { emptyImageFilter } from "./../utils/mixins";
 
 const dummyData = {
   restaurant: {
