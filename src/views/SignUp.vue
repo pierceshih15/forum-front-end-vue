@@ -1,6 +1,6 @@
 <template>
   <div class="container py-5">
-    <form class="w-100" @submit.prevent.stop="handleSubmit">
+    <form class="w-100" @submit.stop.prevent="handleSubmit">
       <div class="text-center mb-4">
         <h1 class="h3 mb-3 font-weight-normal">Sign Up</h1>
       </div>
@@ -58,7 +58,11 @@
         />
       </div>
 
-      <button class="btn btn-lg btn-primary btn-block mb-3" type="submit">Submit</button>
+      <button
+        class="btn btn-lg btn-primary btn-block mb-3"
+        type="submit"
+        :disabled="isProcessing"
+      >Submit</button>
 
       <div class="text-center mb-3">
         <p>
@@ -72,6 +76,9 @@
 </template>
 
 <script>
+import authorizationAPI from "./../apis/authorization";
+import { Toast } from "./../utils/helpers";
+
 export default {
   name: "SignUp",
   data() {
@@ -79,20 +86,59 @@ export default {
       name: "",
       email: "",
       password: "",
-      passwordCheck: ""
+      passwordCheck: "",
+      isProcessing: false
     };
   },
-  method: {
-    handleSubmit(e) {
-      const data = JSON.stringify({
-        name: this.name,
-        email: this.email,
-        password: this.password,
-        passwordCheck: this.passwordCheck
-      });
+  methods: {
+    async handleSubmit(e) {
+      try {
+        // 檢查所有欄位
+        if (!this.name || !this.email || !this.password | !this.passwordCheck) {
+          Toast.fire({
+            type: "warning",
+            title: "請確認已填寫所有欄位"
+          });
+          return;
+        }
 
-      // TODO - 需要驗證使用者登入資訊是否合法
-      console.log("data", data);
+        // 檢查密碼是否相同
+        if (this.password !== this.passwordCheck) {
+          Toast.fire({
+            type: "warning",
+            title: "兩次輸入的密碼不同"
+          });
+          // 清空第二組密碼
+          this.passwordCheck = "";
+          return;
+        }
+
+        this.isProcessing = true;
+
+        const { data, statusText } = await authorizationAPI.signUp({
+          name: this.name,
+          email: this.email,
+          password: this.password,
+          passwordCheck: this.passwordCheck
+        });
+
+        if (statusText !== "OK" || data.status !== "success") {
+          throw new Error(data.message);
+        }
+
+        Toast.fire({
+          type: "success",
+          title: "已成功註冊，請登入使用"
+        });
+
+        this.$router.push("/signin");
+      } catch (error) {
+        this.isProcessing = false;
+        Toast.fire({
+          type: "warning",
+          title: `無法註冊 - ${error.message}`
+        });
+      }
     }
   }
 };
