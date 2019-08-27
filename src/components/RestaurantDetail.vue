@@ -72,6 +72,15 @@ export default {
       restaurant: this.initialRestaurant
     };
   },
+  // 監聽外層資料傳入
+  watch: {
+    initialRestaurant(restaurant) {
+      this.restaurant = {
+        ...this.restaurant,
+        ...restaurant
+      };
+    }
+  },
   methods: {
     addFavorite() {
       this.restaurant = {
