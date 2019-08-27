@@ -37,14 +37,14 @@
               v-if="isFollowed"
               type="button"
               class="btn btn-danger"
-              @click.stop.prevent="removeFollowing()"
+              @click.stop.prevent="removeFollowing(user.id)"
             >取消追蹤</button>
 
             <button
               v-else
               type="button"
-              class="btn btn-danger"
-              @click.stop.prevent="addFollowing()"
+              class="btn btn-primary"
+              @click.stop.prevent="addFollowing(user.id)"
             >追蹤</button>
           </template>
         </div>
@@ -55,6 +55,8 @@
 
 <script>
 import { emptyImageFilter } from "./../utils/mixins";
+import usersAPI from "./../apis/users";
+import { Toast } from "./../utils/helpers";
 
 export default {
   name: "UserProfileCard",
@@ -65,7 +67,7 @@ export default {
       required: true
     },
     isCurrentUser: {
-      type: Object,
+      type: Boolean,
       required: true
     },
     initialIsFollowed: {
@@ -78,12 +80,47 @@ export default {
       isFollowed: this.initialIsFollowed
     };
   },
+  watch: {
+    initialIsFollowed(isFollowed) {
+      this.isFollowed = isFollowed;
+    }
+  },
   methods: {
-    addFollowing() {
-      this.isFollowed = true;
+    async addFollowing(userId) {
+      try {
+        const { data, statusText } = await usersAPI.addFollowing({
+          userId
+        });
+
+        if (statusText !== "OK" || data.status !== "success") {
+          throw new Error(statusText);
+        }
+
+        this.isFollowed = true;
+      } catch (error) {
+        Toast.fire({
+          type: "error",
+          title: "已開始追蹤該使用者"
+        });
+      }
     },
-    removeFollowing() {
-      this.isFollowed = false;
+    async removeFollowing(userId) {
+      try {
+        const { data, statusText } = await usersAPI.deleteFollowing({
+          userId
+        });
+
+        if (statusText !== "OK" || data.status !== "success") {
+          throw new Error(statusText);
+        }
+
+        this.isFollowed = false;
+      } catch (error) {
+        Toast.fire({
+          type: "error",
+          title: "暫時無法取消追蹤，請稍後再試"
+        });
+      }
     }
   }
 };
