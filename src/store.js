@@ -14,18 +14,29 @@ export default new Vuex.Store({
       image: '',
       isAdmin: false,
     },
-    isAuthenticated: false
+    isAuthenticated: false,
+    token: ''
   },
   // 用來修改 state 資料的函式
   mutations: {
     setCurrentUser(state, currentUser) {
       state.currentUser = {
-          ...state.currentUser,
-          // 將 API 取得的 currentUser 覆蓋掉 Vuex state 中的 currentUser
-          ...currentUser
-        },
-        // 將使用者的登入狀態改為 true
-        state.isAuthenticated = true
+        ...state.currentUser,
+        // 將 API 取得的 currentUser 覆蓋掉 Vuex state 中的 currentUser
+        ...currentUser
+      }
+
+      // 將使用者驗證用的 token 存入 state 中使用
+      state.token = localStorage.getItem('token')
+      // 將使用者的登入狀態改為 true
+      state.isAuthenticated = true
+    },
+    revokeAuthentication(state) {
+      state.currentUser = {}
+      state.isAuthenticated = false
+      // 登出時，清空 state 中的 token
+      state.token = ''
+      localStorage.removeItem('token')
     }
   },
   // 用來設定其他的非同步函式
