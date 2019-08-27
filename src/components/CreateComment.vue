@@ -5,13 +5,14 @@
       <textarea v-model="text" class="form-control" rows="3" name="text" />
     </div>
     <div class="text-right">
-      <button type="submit" class="btn btn-primary mr-0">Submit</button>
+      <button type="submit" class="btn btn-primary mr-0" :disabled="isProcessing">Submit</button>
     </div>
   </form>
 </template>
 
 <script>
-import uuid from "uuid/v4";
+import commentsAPI from "./../apis/comments";
+import { Toast } from "./../utils/helpers";
 
 export default {
   props: {
@@ -22,21 +23,53 @@ export default {
   },
   data() {
     return {
-      text: ""
+      text: "",
+      isProcessing: false
     };
   },
   methods: {
-    handleSubmit() {
-      console.log("sumbit");
+    async handleSubmit() {
+      try {
+        if (!this.text) {
+          Toast.fire({
+            type: "warning",
+            title: "您尚未填寫任何評論"
+          });
+          return;
+        }
 
-      // TODO: 向 API 發送 POST 請求
-      // 伺服器新增 Comment 成功後...
-      this.$emit("after-create-comment", {
-        commentId: uuid(),
-        restaurantId: this.restaurantId,
-        text: this.text
-      });
-      this.text = "";
+        this.isProcessing = true;
+
+        const { data, statusText } = await commentsAPI.createComment({
+          restaurantId: this.restaurantId,
+          text: this.text
+        });
+
+        if (statusText !== "OK" || data.status !== "success") {
+          throw new Error(statusText);
+        }
+
+        this.$emit("after-create-comment", {
+          commentId: data.commentId,
+          restaurantId: this.restaurantId,
+          text: this.text
+        });
+
+        this.isProcessing = false;
+        this.text = "";
+
+        Toast.fire({
+          type: "success",
+          title: "成功新增評論"
+        });
+      } catch (error) {
+        this.isProcessing = false;
+
+        Toast.fire({
+          type: "error",
+          title: "無法新增評論，請稍後再試"
+        });
+      }
     }
   }
 };
