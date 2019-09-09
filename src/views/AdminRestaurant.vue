@@ -1,6 +1,6 @@
 <template>
   <div class="container py-5">
-    <div v-if="isLoading" />
+    <Spinner v-if="isLoading" />
     <div v-else class="row">
       <div class="col-md-12">
         <h1>{{ restaurant.name }}</h1>
@@ -39,50 +39,54 @@
 </template>
 
 <script>
-import { emptyImageFilter } from "./../utils/mixins";
-import adminAPI from "./../apis/admin";
-import { Toast } from "./../utils/helpers";
+import Spinner from './../components/Spinner'
+import { emptyImageFilter } from './../utils/mixins'
+import adminAPI from './../apis/admin'
+import { Toast } from './../utils/helpers'
 
 export default {
-  name: "AdminRestaurant",
+  name: 'AdminRestaurant',
   mixins: [emptyImageFilter],
+  components: {
+    Spinner
+  },
   data() {
     return {
       restaurant: {
         id: -1,
-        name: "",
-        categoryName: "",
-        image: "",
-        openingHours: "",
-        tel: "",
-        address: "",
-        description: ""
+        name: '',
+        categoryName: '',
+        image: '',
+        openingHours: '',
+        tel: '',
+        address: '',
+        description: ''
       },
       isLoading: false
-    };
+    }
   },
   mounted() {
-    const { id: restaurantId } = this.$route.params;
-    this.fetchRestaurant(restaurantId);
+    const { id: restaurantId } = this.$route.params
+    this.fetchRestaurant(restaurantId)
   },
   beforeRouteUpdate(to, from, next) {
-    const { id } = to.params;
-    this.fetchRestaurant(id);
-    next();
+    const { id } = to.params
+    this.fetchRestaurant(id)
+    next()
   },
   methods: {
     async fetchRestaurant(restaurantId) {
-      this.isLoading = true;
+      this.isLoading = true
       try {
         const {
           data: { restaurant },
           statusText
         } = await adminAPI.restaurants.getDetail({
           restaurantId
-        });
+        })
 
-        if (statusText !== "OK") {
-          throw new Error(statusText);
+        if (statusText !== 'OK') {
+          throw new Error(statusText)
         }
 
         this.restaurant = {
@@ -95,26 +99,26 @@ export default {
           tel: restaurant.tel,
           address: restaurant.address,
           description: restaurant.description
-        };
-        this.isLoading = false;
+        }
+        this.isLoading = false
       } catch (error) {
-        this.isLoading = false;
+        this.isLoading = false
         if (!this.id) {
           Toast.fire({
-            type: "warning",
-            title: "該餐廳不存在，請選擇其他資料"
-          });
+            type: 'warning',
+            title: '該餐廳不存在，請選擇其他資料'
+          })
           this.$router.push({
-            name: "admin-restaurants"
-          });
+            name: 'admin-restaurants'
+          })
         } else {
           Toast.fire({
-            type: "error",
-            title: "無法取得餐廳資料，請稍後再試"
-          });
+            type: 'error',
+            title: '無法取得餐廳資料，請稍後再試'
+          })
         }
       }
     }
   }
-};
+}
 </script>

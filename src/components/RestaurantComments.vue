@@ -22,11 +22,11 @@
 </template>
 
 <script>
-import moment from "moment";
-import commentsAPI from "./../apis/comments";
-import { fromNowFilter } from "./../utils/mixins";
-import { Toast } from "./../utils/helpers";
-import { mapState } from "vuex";
+import moment from 'moment'
+import commentsAPI from './../apis/comments'
+import { fromNowFilter } from './../utils/mixins'
+import { Toast } from './../utils/helpers'
+import { mapState } from 'vuex'
 
 export default {
   mixins: [fromNowFilter],
@@ -41,29 +41,45 @@ export default {
       try {
         const { data, statusText } = await commentsAPI.deleteComment({
           commentId
-        });
+        })
 
-        if (statusText !== "OK" || data.status !== "success") {
-          throw new Error(statusText);
+        if (statusText !== 'OK' || data.status !== 'success') {
+          throw new Error(statusText)
         }
 
         // 觸發父層事件 - $emit( '事件名稱' , 傳遞的資料 )
-        this.$emit("after-delete-comment", commentId);
+        this.$emit('after-delete-comment', commentId)
 
         Toast.fire({
-          type: "success",
-          title: "成功刪除評論"
-        });
+          type: 'success',
+          title: '成功刪除評論'
+        })
       } catch (error) {
         Toast.fire({
-          type: "error",
-          title: "無法刪除評論，請稍後再試"
-        });
+          type: 'error',
+          title: '無法刪除評論，請稍後再試'
+        })
       }
     }
   },
   computed: {
-    ...mapState(["currentUser"])
+    ...mapState(['currentUser'])
   }
-};
+}
 </script>
+
+<style scoped>
+h2.my-4 {
+  margin-bottom: 1rem !important;
+  font-size: 18px;
+}
+
+h3 {
+  margin-bottom: 3px;
+  line-height: 1.3;
+}
+
+.blockquote-footer {
+  font-size: 12.5px;
+}
+</style>

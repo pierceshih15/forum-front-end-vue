@@ -1,5 +1,6 @@
 <template>
-  <form v-show="!isLoading" @submit.stop.prevent="handleSumbit">
+  <Spinner v-if="isLoading" />
+  <form v-else @submit.stop.prevent="handleSumbit">
     <div class="form-group">
       <label for="name">Name</label>
       <input
@@ -110,23 +111,27 @@
 </template>
 
 <script>
-import adminAPI from "./../apis/admin";
-import { Toast } from "./../utils/helpers";
+import Spinner from './../components/Spinner'
+import adminAPI from './../apis/admin'
+import { Toast } from './../utils/helpers'
 
 export default {
+  components: {
+    Spinner
+  },
   props: {
     initialRestaurant: {
       type: Object,
       default: () => ({
         id: -1,
-        name: "",
-        categoryId: "",
-        tel: "",
-        address: "",
-        description: "",
-        image: "",
-        openingHours: "",
-        file: ""
+        name: '',
+        categoryId: '',
+        tel: '',
+        address: '',
+        description: '',
+        image: '',
+        openingHours: '',
+        file: ''
       })
     },
     isProcessing: {
@@ -137,17 +142,17 @@ export default {
   data() {
     return {
       restaurant: {
-        name: "",
-        categoryId: "",
-        tel: "",
-        address: "",
-        description: "",
-        image: "",
-        openingHours: ""
+        name: '',
+        categoryId: '',
+        tel: '',
+        address: '',
+        description: '',
+        image: '',
+        openingHours: ''
       },
       categories: [],
       isLoading: true
-    };
+    }
   },
   // 監控 initialRestaurant 屬性
   watch: {
@@ -155,63 +160,63 @@ export default {
       this.restaurant = {
         ...this.restaurant,
         ...restaurant
-      };
+      }
     }
   },
   created() {
-    this.fetchCategories();
+    this.fetchCategories()
     this.restaurant = {
       ...this.restaurant,
       ...this.initialRestaurant
-    };
+    }
   },
   methods: {
     async fetchCategories() {
       try {
-        const { data, statusText } = await adminAPI.categories.get();
+        const { data, statusText } = await adminAPI.categories.get()
 
-        if (statusText !== "OK") {
-          throw new Error(statusText);
+        if (statusText !== 'OK') {
+          throw new Error(statusText)
         }
 
-        this.categories = data.categories;
-        this.isLoading = false;
+        this.categories = data.categories
+        this.isLoading = false
       } catch (error) {
-        this.isLoading = false;
+        this.isLoading = false
         Toast.fire({
-          type: "error",
-          title: "無法取得餐廳類別，請稍後再試"
-        });
+          type: 'error',
+          title: '無法取得餐廳類別，請稍後再試'
+        })
       }
     },
     handleFileChange(e) {
-      const files = e.target.files;
+      const files = e.target.files
 
-      if (!files.length) return;
+      if (!files.length) return
 
-      const imageURL = window.URL.createObjectURL(files[0]);
-      this.restaurant.image = imageURL;
+      const imageURL = window.URL.createObjectURL(files[0])
+      this.restaurant.image = imageURL
     },
     handleSumbit(e) {
       if (!this.restaurant.name) {
         Toast.fire({
-          type: "warning",
-          title: "請填寫餐廳名稱"
-        });
-        return;
+          type: 'warning',
+          title: '請填寫餐廳名稱'
+        })
+        return
       } else if (!this.restaurant.categoryId) {
         Toast.fire({
-          type: "warning",
-          title: "請選擇餐廳類別"
-        });
-        return;
+          type: 'warning',
+          title: '請選擇餐廳類別'
+        })
+        return
       }
 
-      const form = e.target;
-      const formData = new FormData(form);
+      const form = e.target
+      const formData = new FormData(form)
 
-      this.$emit("after-submit", formData);
+      this.$emit('after-submit', formData)
     }
   }
-};
+}
 </script>

@@ -34,18 +34,35 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from 'vuex'
 
 export default {
-  name: "Navbar",
+  name: 'Navbar',
   computed: {
-    ...mapState(["currentUser", "isAuthenticated"])
+    ...mapState(['currentUser', 'isAuthenticated'])
   },
   methods: {
     logout() {
-      this.$store.commit("revokeAuthentication");
-      this.$router.push("/signin");
+      this.$store.commit('revokeAuthentication')
+      this.$router.push('/signin')
     }
   }
-};
+}
 </script>
+
+<style scoped>
+.navbar-toggler {
+  min-width: 70px;
+  margin-right: 0;
+}
+
+nav.bg-dark {
+  padding: 14px 16px;
+  background-color: #bd2333 !important;
+}
+
+.navbar-brand {
+  font-size: 19px;
+  padding: 0;
+}
+</style>

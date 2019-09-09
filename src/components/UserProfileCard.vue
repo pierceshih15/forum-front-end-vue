@@ -54,12 +54,12 @@
 </template>
 
 <script>
-import { emptyImageFilter } from "./../utils/mixins";
-import usersAPI from "./../apis/users";
-import { Toast } from "./../utils/helpers";
+import { emptyImageFilter } from './../utils/mixins'
+import usersAPI from './../apis/users'
+import { Toast } from './../utils/helpers'
 
 export default {
-  name: "UserProfileCard",
+  name: 'UserProfileCard',
   mixins: [emptyImageFilter],
   props: {
     user: {
@@ -78,11 +78,11 @@ export default {
   data() {
     return {
       isFollowed: this.initialIsFollowed
-    };
+    }
   },
   watch: {
     initialIsFollowed(isFollowed) {
-      this.isFollowed = isFollowed;
+      this.isFollowed = isFollowed
     }
   },
   methods: {
@@ -90,38 +90,39 @@ export default {
       try {
         const { data, statusText } = await usersAPI.addFollowing({
           userId
-        });
+        })
 
-        if (statusText !== "OK" || data.status !== "success") {
-          throw new Error(statusText);
+        if (statusText !== 'OK' || data.status !== 'success') {
+          throw new Error(statusText)
         }
 
-        this.isFollowed = true;
+        this.isFollowed = true
       } catch (error) {
         Toast.fire({
-          type: "error",
-          title: "已開始追蹤該使用者"
-        });
+          type: 'error',
+          title: '已開始追蹤該使用者'
+        })
       }
     },
     async removeFollowing(userId) {
       try {
         const { data, statusText } = await usersAPI.deleteFollowing({
           userId
-        });
+        })
 
-        if (statusText !== "OK" || data.status !== "success") {
-          throw new Error(statusText);
+        if (statusText !== 'OK' || data.status !== 'success') {
+          throw new Error(statusText)
         }
 
-        this.isFollowed = false;
+        this.isFollowed = false
       } catch (error) {
         Toast.fire({
-          type: "error",
-          title: "暫時無法取消追蹤，請稍後再試"
-        });
+          type: 'error',
+          title: '暫時無法取消追蹤，請稍後再試'
+        })
       }
     }
   }
-};
+}
 </script>
+

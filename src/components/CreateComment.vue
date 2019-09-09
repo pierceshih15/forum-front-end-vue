@@ -11,8 +11,8 @@
 </template>
 
 <script>
-import commentsAPI from "./../apis/comments";
-import { Toast } from "./../utils/helpers";
+import commentsAPI from './../apis/comments'
+import { Toast } from './../utils/helpers'
 
 export default {
   props: {
@@ -23,54 +23,60 @@ export default {
   },
   data() {
     return {
-      text: "",
+      text: '',
       isProcessing: false
-    };
+    }
   },
   methods: {
     async handleSubmit() {
       try {
         if (!this.text) {
           Toast.fire({
-            type: "warning",
-            title: "您尚未填寫任何評論"
-          });
-          return;
+            type: 'warning',
+            title: '您尚未填寫任何評論'
+          })
+          return
         }
 
-        this.isProcessing = true;
+        this.isProcessing = true
 
         const { data, statusText } = await commentsAPI.createComment({
           restaurantId: this.restaurantId,
           text: this.text
-        });
+        })
 
-        if (statusText !== "OK" || data.status !== "success") {
-          throw new Error(statusText);
+        if (statusText !== 'OK' || data.status !== 'success') {
+          throw new Error(statusText)
         }
 
-        this.$emit("after-create-comment", {
+        this.$emit('after-create-comment', {
           commentId: data.commentId,
           restaurantId: this.restaurantId,
           text: this.text
-        });
+        })
 
-        this.isProcessing = false;
-        this.text = "";
+        this.isProcessing = false
+        this.text = ''
 
         Toast.fire({
-          type: "success",
-          title: "成功新增評論"
-        });
+          type: 'success',
+          title: '成功新增評論'
+        })
       } catch (error) {
-        this.isProcessing = false;
+        this.isProcessing = false
 
         Toast.fire({
-          type: "error",
-          title: "無法新增評論，請稍後再試"
-        });
+          type: 'error',
+          title: '無法新增評論，請稍後再試'
+        })
       }
     }
   }
-};
+}
 </script>
+
+<style scoped>
+.form-group {
+  margin: 21px 0 8px;
+}
+</style>

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isLoading" />
+  <Spinner v-if="isLoading" />
   <table v-else class="table">
     <thead class="thead-dark">
       <tr>
@@ -37,63 +37,65 @@
 </template>
 
 <script>
-import adminAPI from "./../apis/admin";
-import { Toast } from "./../utils/helpers";
+import Spinner from './../components/Spinner'
+import adminAPI from './../apis/admin'
+import { Toast } from './../utils/helpers'
 
 export default {
+  components: {
+    Spinner
+  },
   data() {
     return {
       restaurants: [],
       isLoading: true
-    };
+    }
   },
   created() {
-    this.fetchRestaurants();
+    this.fetchRestaurants()
   },
   methods: {
     async fetchRestaurants() {
       try {
-        const { data, statusText } = await adminAPI.restaurants.get();
+        const { data, statusText } = await adminAPI.restaurants.get()
 
-        if (statusText !== "OK") {
-          throw new Error(statusText);
+        if (statusText !== 'OK') {
+          throw new Error(statusText)
         }
 
-        this.restaurants = data.restaurants;
-        this.isLoading = false;
+        this.restaurants = data.restaurants
+        this.isLoading = false
       } catch (error) {
-        this.isLoading = false;
+        this.isLoading = false
         Toast.fire({
-          type: "error",
-          title: "無法取得餐廳類別，請稍後再試"
-        });
+          type: 'error',
+          title: '無法取得餐廳類別，請稍後再試'
+        })
       }
     },
     async deleteRestaurant(restaurantId) {
       try {
         const { data, statusText } = await adminAPI.restaurants.delete({
           restaurantId
-        });
+        })
 
-        if (statusText !== "OK" || data.status !== "success") {
-          throw new Error(statusText);
+        if (statusText !== 'OK' || data.status !== 'success') {
+          throw new Error(statusText)
         }
 
-        this.restaurants = this.restaurants.filter(
-          restaurant => restaurant.id !== restaurantId
-        );
+        this.restaurants = this.restaurants.filter(restaurant => restaurant.id !== restaurantId)
 
         Toast.fire({
-          type: "success",
-          title: "已成功刪除餐廳"
-        });
+          type: 'success',
+          title: '已成功刪除餐廳'
+        })
       } catch (error) {
         Toast.fire({
-          type: "error",
-          title: "無法刪除餐廳資料，請稍後再試"
-        });
+          type: 'error',
+          title: '無法刪除餐廳資料，請稍後再試'
+        })
       }
     }
   }
-};
+}
 </script>

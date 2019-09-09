@@ -53,5 +53,18 @@ export default {
     }) {
       return apiHelper.delete(`/admin/restaurants/${restaurantId}`)
     },
+  },
+  users: {
+    get() {
+      return apiHelper.get('/admin/users')
+    },
+    update({
+      userId,
+      isAdmin
+    }) {
+      return apiHelper.put(`/admin/users/${userId}`, {
+        isAdmin
+      })
+    }
   }
 }

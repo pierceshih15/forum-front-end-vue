@@ -1,7 +1,8 @@
 <template>
-  <div>
-    <div class="container py-5">
-      <NavTabs />
+  <div class="container py-5">
+    <NavTabs />
+    <Spinner v-if="isLoading" />
+    <template v-else>
       <h1 class="mt-5">最新動態</h1>
       <hr />
       <div class="row">
@@ -14,51 +15,55 @@
           <NewestComments :comments="comments" />
         </div>
       </div>
-    </div>
+    </template>
   </div>
 </template>
 
 <script>
-import NavTabs from "./../components/NavTabs.vue";
-import NewestRestaurants from "./../components/NewestRestaurants.vue";
-import NewestComments from "./../components/NewestComments.vue";
-
-import restaurantsAPI from "./../apis/restaurants";
-import { Toast } from "./../utils/helpers";
+import NavTabs from './../components/NavTabs.vue'
+import NewestRestaurants from './../components/NewestRestaurants.vue'
+import NewestComments from './../components/NewestComments.vue'
+import Spinner from './../components/Spinner'
+import restaurantsAPI from './../apis/restaurants'
+import { Toast } from './../utils/helpers'
 
 export default {
   components: {
     NavTabs,
     NewestRestaurants,
-    NewestComments
+    NewestComments,
+    Spinner
   },
   data() {
     return {
       restaurants: [],
-      comments: []
-    };
+      comments: [],
+      isLoading: true
+    }
   },
   created() {
-    this.fetchFeeds();
+    this.fetchFeeds()
   },
   methods: {
     async fetchFeeds() {
       try {
-        const { data, statusText } = await restaurantsAPI.getFeeds();
+        const { data, statusText } = await restaurantsAPI.getFeeds()
 
-        if (statusText !== "OK") {
-          throw new Error(statusText);
+        if (statusText !== 'OK') {
+          throw new Error(statusText)
         }
 
-        this.restaurants = data.restaurants;
-        this.comments = data.comments;
+        this.restaurants = data.restaurants
+        this.comments = data.comments
+        this.isLoading = false
       } catch (error) {
+        this.isLoading = false
         Toast.fire({
-          type: "error",
-          title: "無法取得最新動態，請稍後再試"
-        });
+          type: 'error',
+          title: '無法取得最新動態，請稍後再試'
+        })
       }
     }
   }
-};
+}
 </script>
